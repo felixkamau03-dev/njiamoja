@@ -1,143 +1,93 @@
 "use client"
 
-import type React from "react"
-import { motion } from "framer-motion"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { MessageCircle, Package, Truck, ShoppingBag, FileText, MapPin } from "lucide-react"
-
-interface ErrandType {
-  id: string
-  title: string
-  icon: React.ReactNode
-  description: string
-  message: string
-}
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { MessageCircle, Package, Truck, ShoppingCart, FileText, Heart, Utensils } from 'lucide-react'
+import { motion } from "framer-motion"
 
 export function WhatsAppFlow() {
-  const [selectedErrand, setSelectedErrand] = useState<ErrandType | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
 
-  const errandTypes: ErrandType[] = [
+  const errandTypes = [
     {
-      id: "delivery",
-      title: "Package Delivery",
+      icon: <ShoppingCart className="h-6 w-6" />,
+      title: "Shopping & Groceries",
+      message: "Hi! I need help with shopping/groceries. Here are the details:\n\n📍 Pickup Location: [Store/Market name and location]\n📍 Delivery Location: [Your address]\n📝 Items needed: [List of items]\n⏰ Preferred time: [When you need it]\n\nPlease let me know the cost and estimated time. Thank you!"
+    },
+    {
       icon: <Package className="h-6 w-6" />,
-      description: "Send packages across Nairobi",
-      message:
-        "Hi! I need to send a package in Nairobi. Here are the details:\n\n📦 PICKUP LOCATION: \n📍 DELIVERY LOCATION: \n📱 RECIPIENT CONTACT: \n💰 PACKAGE VALUE: \n⏰ PREFERRED TIME: \n\nPlease confirm availability and pricing. Thank you!",
+      title: "Package Pickup & Delivery",
+      message: "Hi! I need a package pickup and delivery service. Details:\n\n📍 Pickup Location: [Full address]\n📍 Delivery Location: [Full address]\n📦 Package details: [Size, weight, contents]\n⏰ Preferred pickup time: [When]\n💰 Declared value: [If valuable]\n\nPlease confirm availability and pricing. Thanks!"
     },
     {
-      id: "pickup",
-      title: "Package Pickup",
-      icon: <Truck className="h-6 w-6" />,
-      description: "Collect items from any location",
-      message:
-        "Hello! I need a package picked up in Nairobi.\n\n📍 PICKUP LOCATION: \n🏠 DELIVERY TO ME AT: \n📱 SENDER CONTACT: \n📦 PACKAGE DESCRIPTION: \n⏰ PREFERRED PICKUP TIME: \n\nKindly confirm availability and cost. Thanks!",
-    },
-    {
-      id: "shopping",
-      title: "Shopping Errand",
-      icon: <ShoppingBag className="h-6 w-6" />,
-      description: "Shop for groceries or items",
-      message:
-        "Hi! I need shopping assistance in Nairobi.\n\n🛒 SHOPPING LIST: \n🏪 PREFERRED STORE: \n📍 DELIVERY ADDRESS: \n💳 PAYMENT METHOD: M-Pesa/Cash\n⏰ WHEN NEEDED: \n\nPlease let me know the service fee. Thank you!",
-    },
-    {
-      id: "documents",
-      title: "Document Services",
       icon: <FileText className="h-6 w-6" />,
-      description: "Document pickup/delivery",
-      message:
-        "Hello! I need help with documents in Nairobi.\n\n📄 SERVICE NEEDED: Pickup/Delivery/Both\n🏢 LOCATION 1: \n🏢 LOCATION 2: \n📋 DOCUMENT TYPE: \n⏰ URGENCY: Same day/Next day\n\nKindly confirm availability and pricing!",
+      title: "Document & Office Errands",
+      message: "Hi! I need help with document/office errands. Details:\n\n📍 Location: [Office/institution address]\n📄 Task: [What needs to be done - pickup, delivery, submission]\n⏰ Deadline: [When it needs to be completed]\n📝 Special instructions: [Any specific requirements]\n\nPlease let me know if you can assist and the cost. Thank you!"
     },
     {
-      id: "custom",
-      title: "Custom Errand",
-      icon: <MapPin className="h-6 w-6" />,
-      description: "Any other errand you need",
-      message:
-        "Hi! I have a custom errand request in Nairobi.\n\n📝 ERRAND DETAILS: \n📍 LOCATION(S): \n⏰ TIMELINE: \n💰 ESTIMATED BUDGET: \n📱 MY CONTACT: \n\nPlease let me know if you can assist and the cost involved. Thanks!",
+      icon: <Heart className="h-6 w-6" />,
+      title: "Pharmacy & Health",
+      message: "Hi! I need help with pharmacy/health errands. Details:\n\n🏥 Pharmacy/Hospital: [Name and location]\n💊 Items needed: [Medicines, prescriptions, health products]\n📍 Delivery to: [Your address]\n⏰ Urgency: [How urgent is this]\n📝 Prescription: [If you have a prescription]\n\nPlease confirm you can help and the charges. Thanks!"
     },
+    {
+      icon: <Utensils className="h-6 w-6" />,
+      title: "Food & Restaurant Orders",
+      message: "Hi! I'd like to order food delivery. Details:\n\n🍽️ Restaurant: [Restaurant name and location]\n📍 Delivery address: [Your full address]\n🍕 Order: [What you want to order]\n⏰ Preferred delivery time: [When you want it]\n💳 Payment: [How you'll pay - M-Pesa, cash, etc.]\n\nPlease confirm availability and total cost including delivery. Thank you!"
+    },
+    {
+      icon: <Truck className="h-6 w-6" />,
+      title: "Custom Errand",
+      message: "Hi! I have a custom errand request. Details:\n\n📝 Task description: [Explain what you need done]\n📍 Location(s): [Where the errand needs to be done]\n⏰ Timeline: [When you need it completed]\n💰 Budget: [If you have a budget in mind]\n📞 Contact: [Your phone number for coordination]\n\nPlease let me know if you can help and the cost. Thanks!"
+    }
   ]
 
-  const handleErrandSelect = (errand: ErrandType) => {
-    const whatsappUrl = `https://wa.me/+254797396914?text=${encodeURIComponent(errand.message)}`
-    window.open(whatsappUrl, "_blank")
+  const handleErrandClick = (message: string) => {
+    const encodedMessage = encodeURIComponent(message)
+    window.open(`https://wa.me/254797396914?text=${encodedMessage}`, "_blank")
+    setIsOpen(false)
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700">
-          <MessageCircle className="h-4 w-4 mr-2" />
-          WhatsApp Us
-        </Button>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button size="lg" className="bg-green-600 hover:bg-green-700">
+            <MessageCircle className="h-5 w-5 mr-2" />
+            Start Your Errand
+          </Button>
+        </motion.div>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-green-600" />
             Choose Your Errand Type
           </DialogTitle>
           <DialogDescription>
-            Select the type of errand you need, and we'll open WhatsApp with a pre-filled message for you.
+            Select the type of errand you need help with, and we'll send a pre-filled WhatsApp message.
           </DialogDescription>
         </DialogHeader>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
-          className="grid sm:grid-cols-2 gap-4 mt-4"
-        >
-          {errandTypes.map((errand) => (
-            <motion.div
+        <div className="grid grid-cols-1 gap-3 py-4">
+          {errandTypes.map((errand, index) => (
+            <motion.button
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              key={errand.id}
+              onClick={() => handleErrandClick(errand.message)}
+              className="flex items-center gap-3 p-3 text-left border rounded-lg hover:bg-gray-50 transition-colors"
             >
-              <Card
-                className="cursor-pointer hover:shadow-md transition-shadow border-2 hover:border-green-200"
-                onClick={() => handleErrandSelect(errand)}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-100 rounded-lg text-green-600">{errand.icon}</div>
-                    <div>
-                      <CardTitle className="text-lg">{errand.title}</CardTitle>
-                      <CardDescription className="text-sm">{errand.description}</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            </motion.div>
+              <div className="text-primary">{errand.icon}</div>
+              <span className="font-medium text-sm">{errand.title}</span>
+            </motion.button>
           ))}
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
-          className="mt-6 p-4 bg-green-50 rounded-lg"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              Pro Tip
-            </Badge>
-          </div>
-          <p className="text-sm text-green-700">
-            Each option opens WhatsApp with a pre-filled message template. Just add your specific details and send!
-          </p>
-        </motion.div>
+        </div>
+        <div className="text-center text-xs text-gray-500 mt-2">
+          This will open WhatsApp with a pre-filled message
+        </div>
       </DialogContent>
     </Dialog>
   )
