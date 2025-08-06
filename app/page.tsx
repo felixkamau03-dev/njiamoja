@@ -54,7 +54,7 @@ export default function HomePage() {
       id: 3,
       name: "Pharmacy Items",
       category: "Health Errands",
-      image: "/placeholder.svg?height=200&width=200&text=Pharmacy+Items",
+      image: "/closeup-view-pharmacist-hand-taking-medicine-box-from-shelf-drug-store.jpg",
       description: "Collect prescriptions, medicines, or health products from pharmacies",
     },
     {
