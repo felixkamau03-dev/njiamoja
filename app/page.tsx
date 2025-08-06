@@ -40,14 +40,14 @@ export default function HomePage() {
       id: 1,
       name: "Fresh Groceries",
       category: "Shopping Errands",
-      image: "/grocery-delivery.png",
+      image: "3d-cartoon-lumberjack-character.jpg",
       description: "We'll shop for your groceries from any supermarket or local market in Nairobi",
     },
     {
       id: 2,
       name: "Office Supplies",
       category: "Business Errands",
-      image: "/front-view-man-delivering-groceries (1).jpg",
+      image: "/3d-cartoon-lumberjack-character.jpg",
       description: "Pick up office supplies, documents, or business materials from any location",
     },
     {
