@@ -47,7 +47,7 @@ export default function HomePage() {
       id: 2,
       name: "Office Supplies",
       category: "Business Errands",
-      image: "/placeholder.svg?height=200&width=200&text=Office+Supplies",
+      image: "/front-view-man-delivering-groceries (1).jpg",
       description: "Pick up office supplies, documents, or business materials from any location",
     },
     {
