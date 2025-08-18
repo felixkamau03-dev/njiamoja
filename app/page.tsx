@@ -54,8 +54,7 @@ export default function HomePage() {
       id: 3,
       name: "Pharmacy Items",
       category: "Health Errands",
-      image: "/update page.tsx
-",
+      image: "/update page.tsx",
       description: "Collect prescriptions, medicines, or health products from pharmacies",
     },
     {
