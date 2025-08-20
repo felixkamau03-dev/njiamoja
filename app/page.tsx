@@ -40,7 +40,7 @@ export default function HomePage() {
       id: 1,
       name: "Fresh Groceries",
       category: "Shopping Errands",
-      image: "3d-cartoon-lumberjack-character.jpg",
+      bd030a85a9e0e884058c54124b986f01.jpg",
       description: "We'll shop for your groceries from any supermarket or local market in Nairobi",
     },
     {
